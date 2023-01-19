@@ -2,6 +2,8 @@ Param ([string] $KeyVaultName, [string] $SecretName, [string] $SecretValue, [str
 
 $startDate = Get-Date
 $startTime = [System.Diagnostics.Stopwatch]::StartNew()
+# add a 2 second delay just to make the elapsed time at least two seconds...
+Start-Sleep -Seconds 2;
 
 $message = ""
 $action = "SKIP"

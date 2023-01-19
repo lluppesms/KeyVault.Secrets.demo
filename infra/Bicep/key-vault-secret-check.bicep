@@ -12,7 +12,7 @@ param utcValue string = utcNow()
 
 var checkForDuplicates = checkForDuplicateKey ? 'true' : 'false'
 
-resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = if (checkForDuplicateKey) {
   name: 'checkSecretValue'
   location: location
   kind: 'AzurePowerShell'
@@ -33,6 +33,8 @@ resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
 
     // scriptContent: '''
     //   Param ([string] $KeyVaultName, [string] $SecretName, [string] $SecretValue, [string] $CheckForDuplicates)
+    //   $startDate = Get-Date
+    //   $startTime = [System.Diagnostics.Stopwatch]::StartNew()
     //   $message = ""
     //   $action = "SKIP"
     //   if ($CheckForDuplicateKey -eq "false") {
@@ -69,8 +71,11 @@ resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     //     $message = "Secret does not exist and a new secret should be created!";
     //     $action = "ADD"
     //   }
-    //   $endTime = $StartTime.Elapsed;
+    //   $endDate = Get-Date
+    //   $endTime = $startTime.Elapsed;
     //   $elapsedTime = "Elapsed Time: {0:HH:mm:ss}" -f ([datetime]$endTime.Ticks)
+    //   $elapsedTime += "; Start: {0:HH:mm:ss}" -f ([datetime]$startDate)
+    //   $elapsedTime += "; End: {0:HH:mm:ss}" -f ([datetime]$endDate)
     //   Write-Output $message
     //   Write-Output $action
     //   Write-Output $elapsedTime
@@ -82,6 +87,6 @@ resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   }
 }
 
-output message string = checkSecretValue.properties.outputs.message
-output action string = checkSecretValue.properties.outputs.action
-output elapsed string = checkSecretValue.properties.outputs.elapsed
+output message string = checkSecretValue != null ? checkSecretValue.properties.outputs.message : ''
+output action string = checkSecretValue != null ? checkSecretValue.properties.outputs.action : ''
+output elapsed string = checkSecretValue != null ? checkSecretValue.properties.outputs.elapsed : ''

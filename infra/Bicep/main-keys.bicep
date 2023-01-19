@@ -41,11 +41,11 @@ module keyVaultStorage 'key-vault-secret-storageconnection.bicep' = {
   name: 'keyVaultStorage${deploymentSuffix}'
   dependsOn: [ keyVaultModule ]
   params: {
-    moduleName: 'keyVaultStorage1${deploymentSuffix}'
+    moduleName: 'keyVaultStorage${deploymentSuffix}'
     keyVaultName: keyVaultModule.outputs.name
     keyName: 'BlobStorageConnectionString'
     storageAccountName: resourceNames.outputs.blobStorageAccountName
-    checkForDuplicateKey: true
+    checkForDuplicateKey: false
     location: location
   }
 }
@@ -56,7 +56,9 @@ module keyVaultStorage 'key-vault-secret-storageconnection.bicep' = {
   // initial working test showed that it took ~2 minutes to create each secret for a total of 17 minutes
 
   // a) how much faster if I do check for duplicate key = false?
+  //     much faster
   // b) how much faster if I used a path to a script file instead of an inline script?
+  //     no change... 
 
 module keyVaultCosmos 'key-vault-secret-cosmosconnection.bicep' = {
   name: 'keyVaultCosmos${deploymentSuffix}'
@@ -66,7 +68,7 @@ module keyVaultCosmos 'key-vault-secret-cosmosconnection.bicep' = {
     keyVaultName: keyVaultModule.outputs.name
     keyName: 'CosmosConnectionString'
     cosmosAccountName: resourceNames.outputs.cosmosAccountName
-    checkForDuplicateKey: true
+    checkForDuplicateKey: false
     location: location
   }
 }
@@ -79,7 +81,7 @@ module keyVaultServiceBus 'key-vault-secret-servicebusconnection.bicep' = {
     keyVaultName: keyVaultModule.outputs.name
     keyName: 'ServiceBusConnectionString'
     serviceBusName: resourceNames.outputs.serviceBusName
-    checkForDuplicateKey: true
+    checkForDuplicateKey: false
     location: location
   }
 }
@@ -92,7 +94,7 @@ module keyVaultSignalR 'key-vault-secret-signalrconnection.bicep' = {
     keyVaultName: keyVaultModule.outputs.name
     keyName: 'SignalRConnectionString'
     signalRName: resourceNames.outputs.signalRName
-    checkForDuplicateKey: true
+    checkForDuplicateKey: false
     location: location
   }
 }
@@ -105,7 +107,7 @@ module keyVaultIoTHub 'key-vault-secret-iothubconnection.bicep' = {
     keyVaultName: keyVaultModule.outputs.name
     keyName: 'IotHubConnectionString'
     iotHubName: resourceNames.outputs.iotHubName
-    checkForDuplicateKey: true
+    checkForDuplicateKey: false
     location: location
   }
 }

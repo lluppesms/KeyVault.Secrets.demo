@@ -17,7 +17,7 @@ var signalRConnectionString = 'Endpoint=https://${signalRName}.service.signalr.n
 // Note: the Powershell scripts that check for duplicate key values in the KeyVault do not like the & and ; characters at all so remove them for the check
 var signalRConnectionStringSanitized = replace(replace(signalRConnectionString, '&', '_'), ';', '_')
 
-module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = if (checkForDuplicateKey) {
+module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = {
   name: '${moduleName}-Check'
   params: {
     keyVaultName: keyVaultName

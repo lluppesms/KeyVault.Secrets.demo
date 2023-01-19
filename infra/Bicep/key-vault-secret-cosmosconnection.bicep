@@ -17,7 +17,7 @@ var cosmosConnectionString = 'AccountEndpoint=https://${cosmosAccountName}.docum
 // Note: the Powershell scripts that check for duplicate key values in the KeyVault do not like the & and ; characters at all so remove them for the check
 var cosmosConnectionStringSanitized = replace(replace(cosmosConnectionString, '&', '_'), ';', '_')
 
-module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = if (checkForDuplicateKey) {
+module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = {
   name: '${moduleName}-Check'
   params: {
     keyVaultName: keyVaultName
