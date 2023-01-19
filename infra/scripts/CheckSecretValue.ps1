@@ -1,6 +1,7 @@
 Param ([string] $KeyVaultName, [string] $SecretName, [string] $SecretValue, [string] $CheckForDuplicates)
 
-$StartTime = [System.Diagnostics.Stopwatch]::StartNew()
+$startDate = Get-Date
+$startTime = [System.Diagnostics.Stopwatch]::StartNew()
 
 $message = ""
 $action = "SKIP"
@@ -39,8 +40,11 @@ else {
   $action = "ADD"
 }
 
-$endTime = $StartTime.Elapsed;
+$endDate = Get-Date
+$endTime = $startTime.Elapsed;
 $elapsedTime = "Elapsed Time: {0:HH:mm:ss}" -f ([datetime]$endTime.Ticks)
+$elapsedTime += "; Start: {0:HH:mm:ss}" -f ([datetime]$startDate)
+$elapsedTime += "; End: {0:HH:mm:ss}" -f ([datetime]$endDate)
 
 Write-Output $message
 Write-Output $action
