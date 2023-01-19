@@ -69,14 +69,19 @@ resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     //     $message = "Secret does not exist and a new secret should be created!";
     //     $action = "ADD"
     //   }
+    //   $endTime = $StartTime.Elapsed;
+    //   $elapsedTime = "Elapsed Time: {0:HH:mm:ss}" -f ([datetime]$endTime.Ticks)
     //   Write-Output $message
     //   Write-Output $action
+    //   Write-Output $elapsedTime
     //   $DeploymentScriptOutputs = @{}
     //   $DeploymentScriptOutputs['message'] = $message
     //   $DeploymentScriptOutputs['action'] = $action
+    //   $DeploymentScriptOutputs['elapsed'] = $elapsedTime
     //   '''
   }
 }
 
 output message string = checkSecretValue.properties.outputs.message
 output action string = checkSecretValue.properties.outputs.action
+output elapsed string = checkSecretValue.properties.outputs.elapsed

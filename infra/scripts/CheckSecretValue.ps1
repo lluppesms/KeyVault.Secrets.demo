@@ -1,5 +1,7 @@
 Param ([string] $KeyVaultName, [string] $SecretName, [string] $SecretValue, [string] $CheckForDuplicates)
 
+$StartTime = [System.Diagnostics.Stopwatch]::StartNew()
+
 $message = ""
 $action = "SKIP"
 
@@ -36,8 +38,15 @@ else {
   $message = "Secret does not exist and a new secret should be created!";
   $action = "ADD"
 }
+
+$endTime = $StartTime.Elapsed;
+$elapsedTime = "Elapsed Time: {0:HH:mm:ss}" -f ([datetime]$endTime.Ticks)
+
 Write-Output $message
 Write-Output $action
+Write-Output $elapsedTime
+
 $DeploymentScriptOutputs = @{}
 $DeploymentScriptOutputs['message'] = $message
 $DeploymentScriptOutputs['action'] = $action
+$DeploymentScriptOutputs['elapsed'] = $elapsedTime
