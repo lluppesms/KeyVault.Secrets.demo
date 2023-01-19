@@ -29,7 +29,6 @@ resource checkSecretValue 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     arguments: ' -KeyVaultName ${keyVaultName} -SecretName ${secretName} -SecretValue ${secretValueSanitized} -CheckForDuplicates ${checkForDuplicates}'
 
     // primaryScriptUri must be an https url
-    //primaryScriptUri: '../scripts/CheckSecretValue.ps1'
     primaryScriptUri: 'https://raw.githubusercontent.com/lluppesms/KeyVault.Secrets.demo/master/infra/scripts/CheckSecretValue.ps1'
 
     // scriptContent: '''
