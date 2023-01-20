@@ -9,7 +9,8 @@ param commonTags object = {}
 param location string = resourceGroup().location
 param adminUserObjectIds array = []
 param applicationUserObjectIds array = []
-//param createUserAssignedIdentity bool = true
+param createUserAssignedIdentity bool = true
+param userAssignedIdentityName string = '${keyVaultName}-cicd'
 
 // --------------------------------------------------------------------------------
 var templateTag = { TemplateFile: '~key-vault.bicep' }
@@ -66,29 +67,28 @@ resource keyVaultResource 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
   }
 }
 
-// // this creates a user assigned identity that can be used to verify and update secrets in future steps
-// var userAssignedIdentityName = '${keyVaultName}-cicd'
-// resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = if (createUserAssignedIdentity) {
-//   name: userAssignedIdentityName
-//   location: location
-// }
-// resource userAssignedIdentityKeyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = if (createUserAssignedIdentity) {
-//   name: 'add'
-//   parent: keyVaultResource
-//   properties: {
-//     accessPolicies: [
-//       {
-//         permissions: {
-//           secrets: ['get','list','set']
-//         }
-//         tenantId: userAssignedIdentity.properties.tenantId
-//         objectId: userAssignedIdentity.properties.principalId
-//       }
-//     ]
-//   }
-// }
+// this creates a user assigned identity that can be used to verify and update secrets in future steps
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = if (createUserAssignedIdentity) {
+  name: userAssignedIdentityName
+  location: location
+}
+resource userAssignedIdentityKeyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-07-01' = if (createUserAssignedIdentity) {
+  name: 'add'
+  parent: keyVaultResource
+  properties: {
+    accessPolicies: [
+      {
+        permissions: {
+          secrets: ['get','list','set']
+        }
+        tenantId: userAssignedIdentity.properties.tenantId
+        objectId: userAssignedIdentity.properties.principalId
+      }
+    ]
+  }
+}
 
 // --------------------------------------------------------------------------------
 output name string = keyVaultResource.name
 output id string = keyVaultResource.id
-//output userManagedIdentityId string = userAssignedIdentity != null ? userAssignedIdentity.id : ''
+output userManagedIdentityId string = userAssignedIdentity != null ? userAssignedIdentity.id : ''

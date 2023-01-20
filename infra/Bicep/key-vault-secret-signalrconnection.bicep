@@ -3,12 +3,13 @@
 //   but ONLY if it does not already exist or the value is different.
 // --------------------------------------------------------------------------------
 param keyVaultName string = 'myKeyVault'
-param keyName string = 'myKeyName'
+param secretName string = 'mySecretName'
 param signalRName string = 'mysignalrname'
 param location string = resourceGroup().location
 param utcValue string = utcNow()
 param moduleName string = 'keyVaultSecret1'
 param checkForDuplicateKey bool = true
+param userManagedIdentityId string = 'myUserManagedIdentityId'
 
 // --------------------------------------------------------------------------------
 resource signalRResource 'Microsoft.SignalRService/SignalR@2022-02-01' existing = { name: signalRName }
@@ -21,11 +22,12 @@ module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = {
   name: '${moduleName}-Check'
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValueSanitized: signalRConnectionStringSanitized
     location: location
     utcValue: utcValue
     checkForDuplicateKey: checkForDuplicateKey
+    userManagedIdentityId: userManagedIdentityId
   }
 }
 
@@ -34,7 +36,7 @@ module keyVaultSecretCreation 'key-vault-secret-create.bicep' = {
   dependsOn: [ keyVaultSecretCheckValue ]
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValue: signalRConnectionString
     action: keyVaultSecretCheckValue.outputs.action
   }

@@ -3,13 +3,14 @@
 //   but ONLY if it does not already exist or the value is different.
 // --------------------------------------------------------------------------------
 param keyVaultName string = 'myKeyVault'
-param keyName string = 'myKeyName'
+param secretName string = 'mySecretName'
 param serviceBusName string = 'myservicebusname'
 param accessKeyName string = 'RootManageSharedAccessKey'
 param location string = resourceGroup().location
 param utcValue string = utcNow()
 param moduleName string = 'keyVaultSecret1'
 param checkForDuplicateKey bool = true
+param userManagedIdentityId string = 'myUserManagedIdentityId'
 
 // --------------------------------------------------------------------------------
 resource serviceBusResource 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = { name: serviceBusName }
@@ -22,11 +23,12 @@ module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = {
   name: '${moduleName}-Check'
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValueSanitized: serviceBusConnectionStringSanitized
     location: location
     utcValue: utcValue
     checkForDuplicateKey: checkForDuplicateKey
+    userManagedIdentityId: userManagedIdentityId
   }
 }
 
@@ -35,7 +37,7 @@ module keyVaultSecretCreation 'key-vault-secret-create.bicep' = {
   dependsOn: [ keyVaultSecretCheckValue ]
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValue: serviceBusConnectionString
     action: keyVaultSecretCheckValue.outputs.action
   }

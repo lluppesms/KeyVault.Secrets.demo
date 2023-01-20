@@ -18,7 +18,7 @@ var commonTags = {
 
 // --------------------------------------------------------------------------------
 module resourceNames 'resource-names.bicep' = {
-  name: 'resourcenames${deploymentSuffix}'
+  name: 'names-resources${deploymentSuffix}'
   params: {
     appName: appName
     environmentCode: environmentCode

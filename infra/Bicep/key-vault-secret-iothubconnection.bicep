@@ -3,12 +3,13 @@
 //   but ONLY if it does not already exist or the value is different.
 // --------------------------------------------------------------------------------
 param keyVaultName string = 'myKeyVault'
-param keyName string = 'myKeyName'
+param secretName string = 'mySecretName'
 param iotHubName string = 'myiothubname'
 param location string = resourceGroup().location
 param utcValue string = utcNow()
 param moduleName string = 'keyVaultSecret1'
 param checkForDuplicateKey bool = true
+param userManagedIdentityId string = 'myUserManagedIdentityId'
 
 // --------------------------------------------------------------------------------
 resource iotHubResource 'Microsoft.Devices/IotHubs@2021-07-02' existing = { name: iotHubName }
@@ -20,11 +21,12 @@ module keyVaultSecretCheckValue 'key-vault-secret-check.bicep' = {
   name: '${moduleName}-Check'
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValueSanitized: iotHubConnectionStringSanitized
     location: location
     utcValue: utcValue
     checkForDuplicateKey: checkForDuplicateKey
+    userManagedIdentityId: userManagedIdentityId
   }
 }
 
@@ -33,7 +35,7 @@ module keyVaultSecretCreation 'key-vault-secret-create.bicep' = {
   dependsOn: [ keyVaultSecretCheckValue ]
   params: {
     keyVaultName: keyVaultName
-    secretName: keyName
+    secretName: secretName
     secretValue: iotHubConnectionString
     action: keyVaultSecretCheckValue.outputs.action
   }

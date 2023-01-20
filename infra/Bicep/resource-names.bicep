@@ -29,7 +29,9 @@ output signalRName string                   = toLower('${sanitizedAppName}-signa
 output streamName string                    = toLower('${sanitizedAppName}-stream-${sanitizedEnvironment}')
 
 // Key Vaults and Storage Accounts can only be 24 characters long
-output keyVaultName string                  = take(toLower('${sanitizedAppName}${sanitizedEnvironment}vault'), 24)
+var keyVaultName                            = take(toLower('${sanitizedAppName}${sanitizedEnvironment}vault'), 24)
+output keyVaultName string                  = keyVaultName
+output keyVaultUserAssignedIdentity string  = '${keyVaultName}-cicd'
 output logicAppStorageAccountName string    = take('${baseStorageName}app${uniqueString(resourceGroup().id)}', 24)
 output blobStorageAccountName string        = take('${baseStorageName}blob${uniqueString(resourceGroup().id)}', 24)
 output iotStorageAccountName string         = take('${baseStorageName}iot${uniqueString(resourceGroup().id)}', 24)
