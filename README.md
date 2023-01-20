@@ -1,9 +1,8 @@
 # Key Vault Secrets Demo
 
 [![Open in vscode.dev](https://img.shields.io/badge/Open%20in-vscode.dev-blue)][1]
-[1]: https://vscode.dev/github/lluppesms/KeyVault.Secrets.demo/
 
-<!-- ![azd Compatible](/Docs/images/AZD_Compatible.png) -->
+[1]: https://vscode.dev/github/lluppesms/KeyVault.Secrets.demo/
 
 ---
 
@@ -17,13 +16,15 @@ This project explores the use of the a PowerShell script to determine if the sec
 
 This process *does work* and only adds secrets if they are new or changed, but is very slow. It takes the process of adding a key vault secret from 5-10 seconds to 2 minutes per secret, which makes this solution not very viable when you are adding a lot of secrets.
 
-    Note: In order to make this work, you have to have a UserAssignedManagedIdentity added to the Key Vault. This identity is needed in order to authenticate to the Key Vault and determine if the secret exists and if it has changed.
+**Note:** *In order to make this work, you have to have a UserAssignedManagedIdentity added to the Key Vault. This identity is needed in order for the DeploymentScript to authenticate to the Key Vault and determine if the secret exists and if the value has changed.*
 
 ---
 
-## Future Work
+## Next Steps to Explore
 
-The next step would be to explore using a script to scan the entire Key Vault and return an array/list of existing names, then have the other steps look at that array and only add a secret if it's NOT in that list. That should speed up the process - **HOWEVER** - it will not handle the case where you *WANT* the secret to be *UPDATED* with a new value.
+The next logical step to explore would be using a script to scan the entire Key Vault and return an array/list of existing names, then have the other steps look at that array and only add a secret if it's NOT in that list, which should speed up the process.
+
+**HOWEVER** - it will not handle the case where you *WANT* the secret to be *UPDATED* with a new value.
 
 ---
 
